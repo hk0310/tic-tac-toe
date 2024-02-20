@@ -10,7 +10,7 @@ function Square({ value, onSquareClick }) {
 
 function Board({ board, xIsNext, onPlay }) {
   function handleClick(i) {
-    if(board[i] || calculateWinner(board)) return;
+    if (board[i] || calculateWinner(board)) return;
 
     const nextBoardState = board.slice();
     nextBoardState[i] = xIsNext ? "X" : "O";
@@ -20,18 +20,23 @@ function Board({ board, xIsNext, onPlay }) {
   const winner = calculateWinner(board);
   let status;
 
-  if(winner) {
+  if (winner) {
     status = "Winner: " + winner;
-  }
-  else {
+  } else {
     status = "Next player: " + (xIsNext ? "X" : "O");
   }
 
   let boardJsx = [];
-  for(let i = 0; i < 3; i++) {
-    let squares = []
-    for(let j = 0; j < 3; j++) {
-      squares = [...squares, <Square value={board[3 * i + j]} onSquareClick={() => handleClick(3 * i + j)} />]
+  for (let i = 0; i < 3; i++) {
+    let squares = [];
+    for (let j = 0; j < 3; j++) {
+      squares = [
+        ...squares,
+        <Square
+          value={board[3 * i + j]}
+          onSquareClick={() => handleClick(3 * i + j)}
+        />,
+      ];
     }
     let row = <div className="board-row">{squares}</div>;
     boardJsx = [...boardJsx, row];
@@ -42,7 +47,7 @@ function Board({ board, xIsNext, onPlay }) {
       <div className="status">{status}</div>
       {boardJsx}
     </>
-  )
+  );
 }
 
 export default function Game() {
@@ -65,25 +70,29 @@ export default function Game() {
 
   const moves = history.map((board, move) => {
     let moveDescription;
-    let coordinate = `${Math.floor(squareChosen / 3) + 1}, ${squareChosen % 3 + 1}`;
+    let coordinate = `${Math.floor(squareChosen / 3) + 1}, ${
+      (squareChosen % 3) + 1
+    }`;
 
-    if(move > 0) {
-      moveDescription = `move #${move} - ${(move + 1) % 2 === 0 ? "X" : "O"} to ${coordinate}`;
-    }
-    else {
+    if (move > 0) {
+      moveDescription = `move #${move} - ${
+        (move + 1) % 2 === 0 ? "X" : "O"
+      } to ${coordinate}`;
+    } else {
       moveDescription = "game start";
     }
 
     return (
       <li key={move}>
         {currentMove != move ? (
-          <button onClick={() => jumpTo(move)}>{`Go to ${moveDescription}`}</button>
-        ) 
-        : (
+          <button
+            onClick={() => jumpTo(move)}
+          >{`Go to ${moveDescription}`}</button>
+        ) : (
           <div>You are at {moveDescription}</div>
         )}
       </li>
-    )
+    );
   });
 
   return (
@@ -107,7 +116,7 @@ function calculateWinner(squares) {
     [1, 4, 7],
     [2, 5, 8],
     [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
